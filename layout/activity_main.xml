@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/sakura"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/takara2"/>
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@drawable/squaregrad"
+        android:id="@+id/email"
+        android:textAlignment="center"
+        android:hint="sähköposti"
+        android:layout_marginBottom="30dp"
+        />
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:id="@+id/pass"
+        android:textAlignment="center"
+        android:hint="salasana"
+        android:background="@drawable/squaregrad"
+        android:layout_marginBottom="30dp"
+        />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="250dp"
+            android:layout_height="38dp"
+            android:layout_margin="10dp"
+            android:text="Kirjaudu"
+            android:background="@drawable/buttonaka"
+            android:id="@+id/enter"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="250dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="10dp"
+            android:text="Registeri"
+            android:background="@drawable/buttonaka"
+            android:id="@+id/newUser"/>
+
+        <!--androidx.appcompat.widget.AppCompatButton
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="TEST"
+            android:id="@+id/test"/-->
+    </LinearLayout>
+</RelativeLayout>

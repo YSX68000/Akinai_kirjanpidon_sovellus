@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sakura"
+    tools:context=".newuser">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:textAlignment="center"
+            android:id="@+id/Emailnew"
+            android:hint="sähköposti"
+            android:background="@drawable/squaregrad"
+            android:layout_marginBottom="30dp"
+            />
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:textAlignment="center"
+            android:hint="salasana"
+            android:id="@+id/Passwordnew"
+            android:background="@drawable/squaregrad"
+            android:layout_marginBottom="30dp"
+            />
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:hint="nimi"
+        android:id="@+id/companyName"
+        android:background="@drawable/squaregrad"
+        android:layout_marginBottom="30dp"
+        />
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:hint="osoite"
+        android:id="@+id/address"
+        android:background="@drawable/squaregrad"
+        android:layout_marginBottom="30dp"
+        />
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+            android:hint="Y-tunnus"
+            android:id="@+id/yTunnus"
+        android:background="@drawable/squaregrad"
+            android:layout_marginBottom="30dp"
+            />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonaka"
+        android:text="REGISTERI"
+        android:id="@+id/register"/>
+    </LinearLayout>
+</RelativeLayout>

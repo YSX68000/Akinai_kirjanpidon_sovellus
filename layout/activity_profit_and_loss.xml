@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/sakura"
+    tools:context=".ProfitAndLossActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        >
+    <Button
+        android:id="@+id/startDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textSize="10dp"
+        android:text="Alkamispäivä" />
+
+    <Button
+        android:id="@+id/endDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textSize="10dp"
+        android:text="Päättymispäivä" />
+
+    <Button
+        android:id="@+id/calculateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:text="Hae" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/totalRevenueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tulot Yhteensä: "
+        android:background="@drawable/underline"
+        android:textStyle="bold"
+        android:textColor="@color/midori"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/revenueRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/totalExpenseTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Menot Yhteensä: "
+        android:background="@drawable/underline"
+        android:textStyle="bold"
+        android:textColor="@color/aka"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/expenseRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/netProfitTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/kuro"
+        android:textStyle="bold"
+        android:background="@drawable/underline"
+        android:text="Nettosumma: "
+        android:textSize="23sp" />
+
+</LinearLayout>
