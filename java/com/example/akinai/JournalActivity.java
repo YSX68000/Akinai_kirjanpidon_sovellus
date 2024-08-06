@@ -8,7 +8,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,8 +39,6 @@ public class JournalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journal);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.abs_layout);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -157,9 +154,8 @@ public class JournalActivity extends AppCompatActivity {
                             for (DataSnapshot timestampSnapshot : dateSnapshot.getChildren()) {
                                 String timestamp = timestampSnapshot.getKey();
                                 Double amount = timestampSnapshot.child("amount").getValue(Double.class);
-                                String itemName = timestampSnapshot.child("itemName").getValue(String.class); // 商品名を取得
                                 if (amount != null) {
-                                    journalEntries.add(new JournalEntry(timestamp, date, category, itemName, amount)); // JournalEntryオブジェクトに商品名を含めて追加
+                                    journalEntries.add(new JournalEntry(timestamp, category, amount));
                                 }
                             }
                         }
@@ -172,5 +168,4 @@ public class JournalActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
