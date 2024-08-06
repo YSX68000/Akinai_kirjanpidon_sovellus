@@ -18,7 +18,7 @@ import java.math.RoundingMode;
 
 public class expenses extends AppCompatActivity {
 
-    Button nkulu8650,matkakulut,toimistot,atk,Puhelinkulut,Pienhankinnat,tyohuone,palkka,yel,Vakuutusmaksut,korko,muut;
+    Button nkulu8650,matkakulut,mainoskulut,toimistot,atk,Puhelinkulut,Pienhankinnat,tyohuone,palkka,yel,Vakuutusmaksut,korko,muut;
 
     String name, itemName;
     double alv14 = 0.14;
@@ -31,7 +31,6 @@ public class expenses extends AppCompatActivity {
     private FirebaseHelper firebaseHelper;
     private String userId;
 
-    String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,7 @@ public class expenses extends AppCompatActivity {
 
         nkulu8650 = findViewById(R.id.nkulu);
         matkakulut = findViewById(R.id.matkakulut);
+        mainoskulut = findViewById(R.id.mainoskulut);
         toimistot = findViewById(R.id.toimistot);
         atk= findViewById(R.id.atk);
         Puhelinkulut= findViewById(R.id.Puhelinkulut);
@@ -92,6 +92,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -121,10 +122,15 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         updateData8650(pretaxamount);
                         updateDataPvat(roundedValue);
+
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
                 builder.setView(custom);
@@ -154,6 +160,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -183,10 +190,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         matkakulut(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -195,6 +206,77 @@ public class expenses extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        mainoskulut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = custom.findViewById(R.id.edittext);
+                final EditText item = custom.findViewById(R.id.item);
+
+                final RadioButton c1 = custom.findViewById(R.id.c1);
+                final RadioButton c2 = custom.findViewById(R.id.c2);
+
+                Button cancel1 = custom.findViewById(R.id.cancel);
+                Button register = custom.findViewById(R.id.register);
+
+                cancel1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.dismiss();
+                    }
+                });
+
+                register.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                        name = editText.getText().toString();
+                        itemName = item.getText().toString();
+                        totalAmount = Double.parseDouble(name);
+
+                        if (c1.isChecked()) {
+                            pretaxamount = Math.round(totalAmount / (1 + alv14));
+                            vat14 = pretaxamount * alv14;
+                            int decimalPlaces = 2;
+
+                            BigDecimal bd = new BigDecimal(Double.toString(vat14));
+                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                            roundedValue = bd.doubleValue();
+                            Log.d("計算結果", String.valueOf(roundedValue));
+                            Log.d("計算結果2", String.valueOf(pretaxamount));
+
+
+                        } else if (c2.isChecked()) {
+                            pretaxamount = Math.round(totalAmount / (1 + alv24));
+                            vat24 = pretaxamount * alv24;
+                            int decimalPlaces = 2;
+
+                            BigDecimal bd = new BigDecimal(Double.toString(vat24));
+                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                            roundedValue = bd.doubleValue();
+                            Log.d("計算結果", String.valueOf(roundedValue));
+                            Log.d("計算結果2", String.valueOf(pretaxamount));
+                        }
+
+                        editText.getText().clear();
+                        item.getText().clear();
+                        builder.dismiss();
+
+                        mainoskulut(pretaxamount);
+                        updateDataPvat(roundedValue);
+
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
+                    }
+                });
+
+
+                builder.setView(custom);
+                builder.show();
+            }
+        });
+
 
         toimistot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,6 +300,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -247,10 +330,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         toimistotarvikkeet(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -282,6 +369,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -311,10 +399,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         toimistotarvikkeet(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -346,6 +438,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -375,10 +468,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         puhelinkulut(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -410,6 +507,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -439,10 +537,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         pienhankinnat(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -474,6 +576,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -503,10 +606,15 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         tyohuone(pretaxamount);
                         updateDataPvat(roundedValue);
+
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -535,14 +643,19 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder2.dismiss();
 
                         palkka(totalAmount);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -571,14 +684,19 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder2.dismiss();
 
                         yel(totalAmount);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -610,6 +728,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try{
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -639,10 +758,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         vakuutusmaksut(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                            Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -674,39 +797,44 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = editText.getText().toString();
-                        itemName = item.getText().toString();
-                        totalAmount = Double.parseDouble(name);
+                        try {
+                            name = editText.getText().toString();
+                            itemName = item.getText().toString();
+                            totalAmount = Double.parseDouble(name);
 
-                        if (c1.isChecked()) {
-                            pretaxamount = Math.round(totalAmount / (1 + alv14));
-                            vat14 = pretaxamount * alv14;
-                            int decimalPlaces = 2;
+                            if (c1.isChecked()) {
+                                pretaxamount = Math.round(totalAmount / (1 + alv14));
+                                vat14 = pretaxamount * alv14;
+                                int decimalPlaces = 2;
 
-                            BigDecimal bd = new BigDecimal(Double.toString(vat14));
-                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-                            roundedValue = bd.doubleValue();
-                            Log.d("計算結果", String.valueOf(roundedValue));
-                            Log.d("計算結果2", String.valueOf(pretaxamount));
+                                BigDecimal bd = new BigDecimal(Double.toString(vat14));
+                                bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                                roundedValue = bd.doubleValue();
+                                Log.d("計算結果", String.valueOf(roundedValue));
+                                Log.d("計算結果2", String.valueOf(pretaxamount));
 
 
-                        } else if (c2.isChecked()) {
-                            pretaxamount = Math.round(totalAmount / (1 + alv24));
-                            vat24 = pretaxamount * alv24;
-                            int decimalPlaces = 2;
+                            } else if (c2.isChecked()) {
+                                pretaxamount = Math.round(totalAmount / (1 + alv24));
+                                vat24 = pretaxamount * alv24;
+                                int decimalPlaces = 2;
 
-                            BigDecimal bd = new BigDecimal(Double.toString(vat24));
-                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-                            roundedValue = bd.doubleValue();
-                            Log.d("計算結果", String.valueOf(roundedValue));
-                            Log.d("計算結果2", String.valueOf(pretaxamount));
+                                BigDecimal bd = new BigDecimal(Double.toString(vat24));
+                                bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                                roundedValue = bd.doubleValue();
+                                Log.d("計算結果", String.valueOf(roundedValue));
+                                Log.d("計算結果2", String.valueOf(pretaxamount));
+                            }
+
+                            editText.getText().clear();
+                            item.getText().clear();
+                            builder.dismiss();
+
+                            korkomaksut(pretaxamount);
+                            updateDataPvat(roundedValue);
+                        }catch (Exception e){
+                            Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
                         }
-
-                        editText.getText().clear();
-                        builder.dismiss();
-
-                        korkomaksut(pretaxamount);
-                        updateDataPvat(roundedValue);
                     }
                 });
 
@@ -738,6 +866,7 @@ public class expenses extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                    try {
                         name = editText.getText().toString();
                         itemName = item.getText().toString();
                         totalAmount = Double.parseDouble(name);
@@ -767,10 +896,14 @@ public class expenses extends AppCompatActivity {
                         }
 
                         editText.getText().clear();
+                        item.getText().clear();
                         builder.dismiss();
 
                         muut(pretaxamount);
                         updateDataPvat(roundedValue);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Kirjoita kelvolliset arvot", Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
 
@@ -792,6 +925,11 @@ public class expenses extends AppCompatActivity {
     private void matkakulut(double amount) {
         long timestamp = System.currentTimeMillis();
         firebaseHelper.updateExpense(userId, "Matkakulut", timestamp, amount, itemName);
+    }
+
+    private void mainoskulut(double amount) {
+        long timestamp = System.currentTimeMillis();
+        firebaseHelper.updateExpense(userId, "Mainoskulut", timestamp, amount, itemName);
     }
 
     private void toimistotarvikkeet(double amount) {
