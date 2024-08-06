@@ -18,7 +18,7 @@ import java.math.RoundingMode;
 
 public class income extends AppCompatActivity {
 
-    Button sales,advertisement,otherincome,korkotulot;
+    Button sales, advertisement, otherincome, korkotulot;
 
     String name, itemName;
     double alv14 = 0.14;
@@ -37,6 +37,7 @@ public class income extends AppCompatActivity {
         setContentView(R.layout.activity_income);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
+
         sales = findViewById(R.id.sales);
         advertisement = findViewById(R.id.advertisement);
         otherincome = findViewById(R.id.otherincome);
@@ -49,15 +50,16 @@ public class income extends AppCompatActivity {
         userId = firebaseHelper.getCurrentUserId();
         if (userId == null) {
             // ユーザーがログインしていない場合の処理
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ユーザーがログインしていません", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // AlertDialogのビルダーを初期化
         final AlertDialog builder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
         final View custom = inflater.inflate(R.layout.custom, null);
 
-        //ad,other,korko
+        // advertisement, otherincome, korkotulot 用のAlertDialogのビルダーを初期化
         final AlertDialog builder2 = new AlertDialog.Builder(this).create();
         LayoutInflater inflater2 = this.getLayoutInflater();
         final View custom2 = inflater.inflate(R.layout.custom2, null);
@@ -84,37 +86,47 @@ public class income extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = editText.getText().toString();
-                        itemName = item.getText().toString();
-                        totalAmount = Double.parseDouble(name);
+                        try {
+                            // EditTextからの入力を取得
+                            name = editText.getText().toString();
+                            itemName = item.getText().toString();
+                            totalAmount = Double.parseDouble(name);
 
-                        if (c1.isChecked()) {
-                            pretaxamount = Math.round(totalAmount / (1 + alv14));
-                            vat14 = pretaxamount * alv14;
-                            int decimalPlaces = 2;
+                            // 税率チェックボックスの状態に基づいて計算を実行
+                            if (c1.isChecked()) {
+                                pretaxamount = Math.round(totalAmount / (1 + alv14));
+                                vat14 = pretaxamount * alv14;
+                                int decimalPlaces = 2;
 
-                            BigDecimal bd = new BigDecimal(Double.toString(vat14));
-                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-                            roundedValue = bd.doubleValue();
-                            Log.d("計算結果", String.valueOf(roundedValue));
-                            Log.d("計算結果2", String.valueOf(pretaxamount));
-                        } else if (c2.isChecked()) {
-                            pretaxamount = Math.round(totalAmount / (1 + alv24));
-                            vat24 = pretaxamount * alv24;
-                            int decimalPlaces = 2;
+                                BigDecimal bd = new BigDecimal(Double.toString(vat14));
+                                bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                                roundedValue = bd.doubleValue();
+                                Log.d("計算結果", String.valueOf(roundedValue));
+                                Log.d("計算結果2", String.valueOf(pretaxamount));
+                            } else if (c2.isChecked()) {
+                                pretaxamount = Math.round(totalAmount / (1 + alv24));
+                                vat24 = pretaxamount * alv24;
+                                int decimalPlaces = 2;
 
-                            BigDecimal bd = new BigDecimal(Double.toString(vat24));
-                            bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-                            roundedValue = bd.doubleValue();
-                            Log.d("計算結果", String.valueOf(roundedValue));
-                            Log.d("計算結果2", String.valueOf(pretaxamount));
+                                BigDecimal bd = new BigDecimal(Double.toString(vat24));
+                                bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+                                roundedValue = bd.doubleValue();
+                                Log.d("計算結果", String.valueOf(roundedValue));
+                                Log.d("計算結果2", String.valueOf(pretaxamount));
+                            }
+
+                            // EditTextの入力をクリア
+                            editText.getText().clear();
+                            item.getText().clear();
+                            builder.dismiss();
+
+                            // データを更新
+                            updateData2000(pretaxamount);
+                            updateDataSvat(roundedValue);
+                        } catch (Exception e) {
+                            // エラーハンドリング
+                            Toast.makeText(getApplicationContext(), "有効な値を入力してください", Toast.LENGTH_SHORT).show();
                         }
-
-                        editText.getText().clear();
-                        builder.dismiss();
-
-                        updateData2000(pretaxamount);
-                        updateDataSvat(roundedValue);
                     }
                 });
                 builder.setView(custom);
@@ -141,15 +153,23 @@ public class income extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = editText.getText().toString();
-                        itemName = item.getText().toString();
-                        totalAmount = Double.parseDouble(name);
+                        try {
+                            // EditTextからの入力を取得
+                            name = editText.getText().toString();
+                            itemName = item.getText().toString();
+                            totalAmount = Double.parseDouble(name);
 
-                        editText.getText().clear();
-                        builder.dismiss();
+                            // EditTextの入力をクリア
+                            editText.getText().clear();
+                            item.getText().clear();
+                            builder.dismiss();
 
-                        advertisement(totalAmount);
-                        //updateDataSvat(roundedValue);
+                            // データを更新
+                            advertisement(totalAmount);
+                        } catch (Exception e) {
+                            // エラーハンドリング
+                            Toast.makeText(getApplicationContext(), "有効な値を入力してください", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder2.setView(custom2);
@@ -176,15 +196,23 @@ public class income extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = editText.getText().toString();
-                        itemName = item.getText().toString();
-                        totalAmount = Double.parseDouble(name);
+                        try {
+                            // EditTextからの入力を取得
+                            name = editText.getText().toString();
+                            itemName = item.getText().toString();
+                            totalAmount = Double.parseDouble(name);
 
-                        editText.getText().clear();
-                        builder.dismiss();
+                            // EditTextの入力をクリア
+                            editText.getText().clear();
+                            item.getText().clear();
+                            builder.dismiss();
 
-                        otherincome(totalAmount);
-                        //updateDataSvat(roundedValue);
+                            // データを更新
+                            otherincome(totalAmount);
+                        } catch (Exception e) {
+                            // エラーハンドリング
+                            Toast.makeText(getApplicationContext(), "有効な値を入力してください", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder2.setView(custom2);
@@ -211,46 +239,31 @@ public class income extends AppCompatActivity {
                 register.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = editText.getText().toString();
-                        itemName = item.getText().toString();
-                        totalAmount = Double.parseDouble(name);
+                        try {
+                            // EditTextからの入力を取得
+                            name = editText.getText().toString();
+                            itemName = item.getText().toString();
+                            totalAmount = Double.parseDouble(name);
 
-                        editText.getText().clear();
-                        builder.dismiss();
+                            // EditTextの入力をクリア
+                            editText.getText().clear();
+                            item.getText().clear();
+                            builder.dismiss();
 
-                        korkotulot(totalAmount);
-                        //updateDataSvat(roundedValue);
+                            // データを更新
+                            korkotulot(totalAmount);
+                        } catch (Exception e) {
+                            // エラーハンドリング
+                            Toast.makeText(getApplicationContext(), "有効な値を入力してください", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder2.setView(custom2);
                 builder2.show();
             }
         });
-
     }
 
+    // 売上データを更新
     private void updateData2000(double amount) {
-        long timestamp = System.currentTimeMillis();
-        firebaseHelper.updateRevenue(userId, "Myyntitulot", timestamp, amount, itemName);
-    }
-
-    private void advertisement(double amount) {
-        long timestamp = System.currentTimeMillis();
-        firebaseHelper.updateRevenue(userId, "Mainostulot", timestamp, amount, itemName);
-    }
-
-    private void otherincome(double amount) {
-        long timestamp = System.currentTimeMillis();
-        firebaseHelper.updateRevenue(userId, "Muut", timestamp, amount, itemName);
-    }
-
-    private void korkotulot(double amount) {
-        long timestamp = System.currentTimeMillis();
-        firebaseHelper.updateRevenue(userId, "Korkotulot", timestamp, amount, itemName);
-    }
-
-    private void updateDataSvat(double amountPV) {
-        long timestamp = System.currentTimeMillis();
-        firebaseHelper.updateTaxSales(userId, timestamp, amountPV);
-    }
-}
+        long timestamp = System
