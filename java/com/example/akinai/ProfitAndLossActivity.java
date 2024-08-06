@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class ProfitAndLossActivity extends AppCompatActivity {
 
+    // 各種UI要素の変数を宣言
     private TextView totalRevenueTextView, totalExpenseTextView, netProfitTextView;
     private RecyclerView revenueRecyclerView, expenseRecyclerView;
     private ProfitAndLossAdapter revenueAdapter, expenseAdapter;
@@ -40,6 +41,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private String userId;
 
+    // 日付選択用のボタンとカレンダー、日付フォーマットの変数を宣言
     private Button startDateButton, endDateButton, calculateButton;
     private Calendar startDate, endDate;
     private SimpleDateFormat dateFormat;
@@ -49,9 +51,11 @@ public class ProfitAndLossActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profit_and_loss);
 
+        // ActionBarをカスタムレイアウトに設定
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
 
+        // レイアウトからUI要素を初期化
         totalRevenueTextView = findViewById(R.id.totalRevenueTextView);
         totalExpenseTextView = findViewById(R.id.totalExpenseTextView);
         netProfitTextView = findViewById(R.id.netProfitTextView);
@@ -61,6 +65,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
         endDateButton = findViewById(R.id.endDateButton);
         calculateButton = findViewById(R.id.calculateButton);
 
+        // RecyclerViewのレイアウトマネージャとアダプターを設定
         revenueRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         expenseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         revenueAdapter = new ProfitAndLossAdapter(revenueEntries);
@@ -68,8 +73,10 @@ public class ProfitAndLossActivity extends AppCompatActivity {
         revenueRecyclerView.setAdapter(revenueAdapter);
         expenseRecyclerView.setAdapter(expenseAdapter);
 
+        // Firebaseのデータベース参照を初期化
         databaseReference = FirebaseDatabase.getInstance().getReference("journals");
 
+        // 現在のユーザーIDを取得
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getUid();
@@ -77,10 +84,12 @@ public class ProfitAndLossActivity extends AppCompatActivity {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
 
+        // 日付フォーマットとカレンダーを初期化
         dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
+        // 開始日ボタンのクリックリスナーを設定
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +97,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
             }
         });
 
+        // 終了日ボタンのクリックリスナーを設定
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +105,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
             }
         });
 
+        // 計算ボタンのクリックリスナーを設定
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,10 +114,12 @@ public class ProfitAndLossActivity extends AppCompatActivity {
         });
     }
 
+    // 日付選択ダイアログを表示するメソッド
     private void showDatePickerDialog(final Calendar date, final Button button) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                // 選択された日付をカレンダーとボタンに設定
                 date.set(Calendar.YEAR, year);
                 date.set(Calendar.MONTH, month);
                 date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -116,9 +129,11 @@ public class ProfitAndLossActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // 財務データを取得し、表示を更新するメソッド
     private void fetchFinancialData() {
         if (userId == null) return;
 
+        // データベースからユーザーのジャーナルデータを取得
         databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -128,6 +143,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
                 Map<String, Double> revenueTotals = new HashMap<>();
                 Map<String, Double> expenseTotals = new HashMap<>();
 
+                // データスナップショットをループし、収益と支出を集計
                 for (DataSnapshot typeSnapshot : dataSnapshot.getChildren()) {
                     String type = typeSnapshot.getKey();
 
@@ -139,6 +155,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
                         for (DataSnapshot dateSnapshot : accountSnapshot.getChildren()) {
                             String dateStr = dateSnapshot.getKey();
                             try {
+                                // 日付文字列をパースし、指定期間内かどうかをチェック
                                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                                 long dateLong = sdf.parse(dateStr).getTime();
 
@@ -156,6 +173,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
                             }
                         }
 
+                        // 収益と支出を合計する
                         if (type.equals("revenues")) {
                             revenueTotals.put(account, revenueTotals.getOrDefault(account, 0.0) + accountTotal);
                             totalRevenue += accountTotal;
@@ -166,6 +184,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
                     }
                 }
 
+                // アダプターにデータを設定し、UIを更新
                 revenueEntries.clear();
                 expenseEntries.clear();
 
@@ -180,6 +199,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
                 revenueAdapter.notifyDataSetChanged();
                 expenseAdapter.notifyDataSetChanged();
 
+                // 合計とネット利益を表示
                 totalRevenueTextView.setText("Tulot Yhteensä: " + totalRevenue + " €");
                 totalExpenseTextView.setText("Menot Yhteensä: " + totalExpense + " €");
                 netProfitTextView.setText("Nettosumma: " + (totalRevenue - totalExpense) + " €");
@@ -187,6 +207,7 @@ public class ProfitAndLossActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                // データ取得に失敗した場合、エラーメッセージを表示
                 Toast.makeText(ProfitAndLossActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });
